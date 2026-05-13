@@ -36,7 +36,7 @@ export const CONFIG = Object.freeze({
     NODE_ENV: process.env.NODE_ENV,
     TAVILY_API_KEY: process.env.TAVILY_API_KEY,
     PINECONE_API_KEY: process.env.PINECONE_API_KEY,
-    PINECONE_INDEX_NAME: process.env.PINECONE_INDEX_NAME || 'perplexity'
+    PINECONE_INDEX_NAME: process.env.PINECONE_INDEX_NAME
 });
 
 

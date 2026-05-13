@@ -1,0 +1,44 @@
+# dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# env files
+.env
+.env.*
+!.env.example
+
+# logs
+logs
+*.log
+
+# git
+.git
+.gitignore
+
+# docker
+dockerfile
+.dockerignore
+
+# editor
+.vscode
+.idea
+
+# mac/windows
+.DS_Store
+Thumbs.db
+
+# tests
+coverage
+
+# build
+dist
+build
+
+# temp
+tmp
+temp
+
+# docs
+README.md
