@@ -1,11 +1,10 @@
 import express from 'express';
 import morgan from 'morgan';
-import httpPino from 'pino-http';
 import passport from './services/passport.service.js';
 import CookieParser from 'cookie-parser';
 import cors from 'cors';
-import AuthRouter from './routes/auth.route.js';
 import errorMiddleware from './errors/error.middleware.js';
+import IndexRoute from './routes/index.route.js';
 
 const app = express();
 
@@ -13,7 +12,6 @@ app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false}))
 app.use(passport.initialize());
-app.use(httpPino());
 app.use(CookieParser());
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
@@ -25,9 +23,8 @@ app.use(cors({
 
 // Home route hai
 app.get('/', (req, res)=>{ 
-  res.log.info("Home route called");
-  res.send("Hello World!")
-})
+  res.end("Hello World!");
+});
 
 // health check karlo
 app.get('/health', (req, res) => {
@@ -37,10 +34,10 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
-  res.send("Server is running")
+  res.end("Server is running")
 });
 
-app.use('/api/auth', AuthRouter);
+app.use('/api', IndexRoute);
 
 app.use(errorMiddleware);
 

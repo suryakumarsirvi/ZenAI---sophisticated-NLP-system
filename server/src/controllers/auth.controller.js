@@ -1,5 +1,4 @@
 import UserSchema from "../models/user.model.js";
-import logger from "../configs/logger.config.js";
 import * as UserRepository from "../repository/user.repository.js";
 import { generateHash, verifyHash } from "../utils/bcrypt.js";
 import { CONFIG } from "../configs/env.config.js";
@@ -8,7 +7,6 @@ import { generateToken } from "../utils/jwt.js";
 export const handleRegister = async (req, res) => {
   const { fullname, email, password } = req.body;
 
-  try {
     const isExist = await UserRepository.findByEmail(email);
 
     if (isExist) {
@@ -53,20 +51,11 @@ export const handleRegister = async (req, res) => {
         accessToken: accessToken,
       },
     });
-  } catch (error) {
-    logger.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Error while register",
-      error: error.message,
-    });
-  }
 };
 
 export const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  try {
     const isExist = await UserRepository.findByEmail(email);
 
     if (!isExist) {
@@ -103,18 +92,9 @@ export const handleLogin = async (req, res) => {
         accessToken: accessToken,
       },
     });
-  } catch (error) {
-    logger.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Error while login",
-      error: error.message,
-    });
-  }
 };
 
 export const handleGoogleAuth = async (req, res) => {
-    try {
         const {
             displayName,
             emails,
@@ -160,19 +140,9 @@ export const handleGoogleAuth = async (req, res) => {
         const redirectURL = `${CONFIG.CLIENT_URL}/google/callback`;
 
         return res.redirect(redirectURL);
-
-    } catch (error) {
-
-        return res.status(500).json({
-            success: false,
-            message: "Error in Google Auth",
-            error: error.message
-        });
-    }
 };
 
 export const handleLogout = async (req, res) => {
-    try {
         const userId = req.user._id;
 
         const user = await UserRepository.findById(userId);
@@ -195,19 +165,9 @@ export const handleLogout = async (req, res) => {
             success: true,
             message: "Logged out successfully"
         });
-
-    } catch (error) {
-
-        return res.status(500).json({
-            success: false,
-            message: "Error while logout",
-            error: error.message
-        });
-    }
 };
 
 export const handleRefresh = async (req, res) => {
-  try {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
@@ -254,10 +214,6 @@ export const handleRefresh = async (req, res) => {
       message: "Token refreshed successfully",
       accessToken: newAccessToken
     });
-  } catch (error) {
-    logger.error(error);
-    return res.status(500).json({ success: false, message: "Internal server error during refresh" });
-  }
 };
 
 export const handleGetMe = async (req, res) => {
