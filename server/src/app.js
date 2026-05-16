@@ -3,11 +3,14 @@ import morgan from 'morgan';
 import passport from './services/passport.service.js';
 import CookieParser from 'cookie-parser';
 import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 import errorMiddleware from './errors/error.middleware.js';
 import IndexRoute from './routes/index.route.js';
 
 const app = express();
-
+app.use(helmet());
+app.use(compression());
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false}))
