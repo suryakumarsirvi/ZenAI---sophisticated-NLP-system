@@ -5,53 +5,61 @@ import jwt from "jsonwebtoken";
 export const register = async (req, res) => {
     const { fullname, email, password } = req.body;
 
-    if (!fullname || !email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: "all fields are required"
-        })
-    };
+    try {
+        if (!fullname || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: "all fields are required"
+            })
+        };
 
-    const isExist = await User.findOne({ email });
+        const isExist = await User.findOne({ email });
 
-    if (isExist) {
-        return res.status(400).json({
-            success: false,
-            message: "User already exist, Try login"
-        })
-    };
+        if (isExist) {
+            return res.status(400).json({
+                success: false,
+                message: "User already exist, Try login"
+            })
+        };
 
-    const newUser = {
-        fullname,
-        email,
-        password
-    }
-
-    const user = await User.create(newUser);
-
-    const token = jwt.sign(
-        {
-            id: user?._id
-        },
-        CONFIG.JWT_SECRET,
-        {
-            expiresIn: '7d'
+        const newUser = {
+            fullname,
+            email,
+            password
         }
-    );
 
-    if (token) {
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'strict'
+        const user = await User.create(newUser);
+
+        const token = jwt.sign(
+            {
+                id: user?._id
+            },
+            CONFIG.JWT_SECRET,
+            {
+                expiresIn: '7d'
+            }
+        );
+
+        if (token) {
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: false,
+                sameSite: 'strict'
+            });
+        };
+
+        res.status(201).json({
+            success: true,
+            message: "Registered Successfully",
+            data: user
         });
-    };
-
-    res.status(201).json({
-        success: true,
-        message: "Registered Successfully",
-        data: user
-    });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error while register",
+            error: error.message
+        })
+    }
 };
 
 export const login = async (req, res) => {
@@ -82,7 +90,7 @@ export const login = async (req, res) => {
 
     const token = jwt.sign(
         {
-            id: user?._id
+            id: isExist?._id
         },
         CONFIG.JWT_SECRET,
         {
@@ -101,7 +109,11 @@ export const login = async (req, res) => {
     res.status(201).json({
         success: true,
         message: "Logged In Successfully",
-        data: user
+        data: {
+            _id: isExist._id,
+            fullname: isExist.fullname,
+            email: isExist.email,
+        }
     });
 };
 

@@ -1,11 +1,16 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import IndexRouter from './routes/index.js';
 
 const app = express();
 
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}))
 
 // health check
 app.get('/health', (req, res) => {
@@ -15,7 +20,6 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
-  res.send("Server is running")
 });
 
 app.use('/api', IndexRouter);

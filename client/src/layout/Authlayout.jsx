@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import Login from '../features/auth/components/Login';
 import Register from '../features/auth/components/Register';
 import { useNavigate } from 'react-router';
+import useAuth from '../features/auth/hooks/useAuth';
 
 const Authlayout = ({ mode: initialMode }) => {
+  const { handleRegister, handleLogin } = useAuth();
   const navigate = useNavigate();
   const [toggleForm, setToggleForm] = useState(initialMode);
   const [formData, setFormData] = useState({
@@ -14,9 +16,9 @@ const Authlayout = ({ mode: initialMode }) => {
 
 
   const handleChange = (e) => {
-    const {value, name} = e.target;
+    const { value, name } = e.target;
 
-    setFormData((prev)=>(
+    setFormData((prev) => (
       {
         ...prev,
         [name]: value
@@ -24,10 +26,31 @@ const Authlayout = ({ mode: initialMode }) => {
     ))
   }
 
-  const handleSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    if (!formData) return;
+
+    const res = await handleRegister(formData);
+
+    setFormData({
+      fullname: "",
+      email: "",
+      password: ""
+    });
+
+    navigate('/home')
+  }
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!formData) return;
+    console.log("start")
+
+    const res = await handleLogin(formData);
+    console.log("last")
+
     setFormData({
       fullname: "",
       email: "",
@@ -44,13 +67,13 @@ const Authlayout = ({ mode: initialMode }) => {
         toggleForm === 'login' ?
           <Login
             handleChange={handleChange}
-            handleSubmit={handleSubmit}
+            handleLoginSubmit={handleLoginSubmit}
             formData={formData}
             setFormData={setFormData}
           /> :
           <Register
             handleChange={handleChange}
-            handleSubmit={handleSubmit}
+            handleRegisterSubmit={handleRegisterSubmit}
             formData={formData}
             setFormData={setFormData}
           />

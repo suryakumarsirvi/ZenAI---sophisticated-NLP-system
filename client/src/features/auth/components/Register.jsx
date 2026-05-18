@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Register = ({ handleChange, handleSubmit, formData }) => {
+const Register = ({ handleChange, handleRegisterSubmit, formData }) => {
 
   return (
-    <form onSubmit={handleSubmit} className='p-4 md:w-1/4 w-1/2 flex flex-col gap-4'>
+    <form onSubmit={handleRegisterSubmit} className='p-4 md:w-1/4 w-1/2 flex flex-col gap-4'>
       <h1>Register Form</h1>
       <input name='fullname' value={formData.fullname} onChange={(e)=>handleChange(e)} placeholder='fullname' className='p-2 outline-none rounded border border-zinc-500 bg-zinc-300' type="text" />
       <input name='email' value={formData.email} onChange={(e)=>handleChange(e)} placeholder='email' className='p-2 outline-none rounded border border-zinc-500 bg-zinc-300' type="text" />
